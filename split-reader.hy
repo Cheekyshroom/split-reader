@@ -20,9 +20,9 @@
   (while True
     (screen.clear)
     (for [i (range h)]
-      (screen.addstr i margin (.get lines (+ current-line i) "not found")))
+      (screen.addstr i margin (.get lines (+ current-line i) "")))
     (for [i (range h)]
-      (screen.addstr i (+ (int (/ w 2)) margin) (.get lines (+ current-line i h) "not found")))
+      (screen.addstr i (+ (int (/ w 2)) margin) (.get lines (+ current-line i h) "")))
     (screen.refresh)
 
     (try
