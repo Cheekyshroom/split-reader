@@ -1,2 +1,8 @@
 # split-reader
-a simple shell txt reader with nicer paging
+A simple shell txt reader with nicer paging.
+
+usage
+```
+make install
+split-reader -h
+```
