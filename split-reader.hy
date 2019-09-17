@@ -34,7 +34,9 @@
       [(= key "q") (break)]
       [(= key "KEY_UP") (setv current-line (dec current-line))]
       [(= key "KEY_DOWN") (setv current-line (inc current-line))]
-      [(= key " ") (setv current-line (+ current-line h))])))
+      [(= key " ") (setv current-line (+ current-line h))]))
+
+  (return current-line))
 
 (defmain [&rest _]
   (setv parser (argparse.ArgumentParser))
@@ -50,4 +52,6 @@
     (print "Give me a file to read.")
     (return))
 
-  (curses.wrapper (fn [screen] (run args.file args.line args.margin screen))))
+  (setv last-line (curses.wrapper (fn [screen] (run args.file args.line args.margin screen))))
+
+  (print "You finished on line:" last-line))
