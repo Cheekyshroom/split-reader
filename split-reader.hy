@@ -67,5 +67,7 @@
   (print "You finished on line:" last-line)
 
   (with [f (open (/ (Path.home) ".split-resume") "w")]
-    (print (or args.file file) :file f)
+    (print (if args.file
+               (str (/ (Path.cwd) args.file))
+               file) :file f)
     (print (str last-line) :file f)))
