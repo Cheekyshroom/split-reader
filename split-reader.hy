@@ -2,7 +2,8 @@
 
 (import argparse
         curses
-        [itertools [count]])
+        [itertools [count]]
+        [pathlib [Path]])
 
 (defn lines-from [filename]
   (with [f (open filename)]
@@ -46,12 +47,25 @@
     :help "Start reading from a specific line")
   (.add-argument parser "-margin" :type int :default 0
     :help "Padding to add to the left side of the text.")
+  (.add-argument parser "--resume" :dest "resume" :action "store_const"
+    :const True :default False
+    :help "Resume reading your last file where you left off.")
   (setv args (parser.parse-args))
 
-  (unless args.file
+  (unless (or args.file args.resume)
     (print "Give me a file to read.")
     (return))
 
-  (setv last-line (curses.wrapper (fn [screen] (run args.file args.line args.margin screen))))
+  (if args.resume
+    (do
+      (with [f (open (/ (Path.home) ".split-resume"))]
+        (setv file (.strip (f.readline)))
+        (setv line (int (.strip (f.readline))))
+        (setv last-line (curses.wrapper (fn [screen] (run file line args.margin screen))))))
+    (setv last-line (curses.wrapper (fn [screen] (run args.file args.line args.margin screen)))))
 
-  (print "You finished on line:" last-line))
+  (print "You finished on line:" last-line)
+
+  (with [f (open (/ (Path.home) ".split-resume") "w")]
+    (print (or args.file file) :file f)
+    (print (str last-line) :file f)))
